@@ -3,6 +3,5 @@ numpy
 ffmpeg
 streamlit
 torch
-torchaudio
+librosa
 qdrant-client
-audiocraft
