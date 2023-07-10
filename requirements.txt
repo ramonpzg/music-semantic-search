@@ -5,3 +5,4 @@ streamlit
 torch
 librosa
 qdrant-client
+pandas
