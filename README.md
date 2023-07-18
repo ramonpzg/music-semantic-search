@@ -103,3 +103,40 @@ best practices for securing your resources.
 Lastly, we'll need to get the urls for each song. We'll do so in Python with the `boto3` 
 library.
 
+```python
+import pandas as pd
+import boto3
+
+s3 = boto3.client('s3')
+objects = s3.list_objects_v2(Bucket='datalakerpg', Prefix='ludwig_music_data/')
+
+def get_s3_objects(bucket_name, prefix):
+    paginator = s3.get_paginator('list_objects_v2')
+    page_iterator = paginator.paginate(Bucket=bucket_name, Prefix=prefix)
+    all_urls = []
+    all_objects = []
+    for page in page_iterator:
+        if 'Contents' in page:
+            all_objects.extend(page['Contents'])
+            for obj in page['Contents']:
+                # Construct the object URL
+                if obj['Key'].endswith(".mp3"):
+                    object_url = f"https://{bucket_name}.s3.ap-southeast-2.amazonaws.com/{obj['Key']}"
+                    all_urls.append(object_url)
+    return all_urls
+
+# Replace 'your-bucket-name' with the actual bucket name
+all_urls = get_s3_objects('your_bucket', 'ludwig_music_data/mp3/')
+
+# Create a dataframe with the ids and song urls 
+ids = [i.split('/')[-1].replace(".mp3", '') for i in all_urls]
+music_paths = pd.DataFrame(zip(ids, all_urls), columns=["ids", 'urls'])
+
+# combine urls with metadata dataframe
+metadata = (metadata.merge(right=music_paths, how="left", left_on='ids', right_on='ids')
+                    .drop("index_y", axis=1)
+                    .rename({"index_x": "index"}, axis=1))
+
+# save your new payload
+metadata.to_parquet("metadata.parquet")
+```
