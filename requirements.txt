@@ -1,8 +1,5 @@
-transformers
 numpy
-ffmpeg
-streamlit
-torch
-librosa
 qdrant-client
 pandas
+nicegui
+pyarrow
