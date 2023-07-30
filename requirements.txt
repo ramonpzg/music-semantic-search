@@ -1,5 +1,6 @@
+pip>=23.1.0
 numpy
 qdrant-client
 pandas
-nicegui
+nicegui==1.3.6
 pyarrow
