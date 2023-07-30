@@ -2,6 +2,7 @@ from qdrant_client import QdrantClient
 from qdrant_client import models
 from nicegui import ui
 import pandas as pd
+import os
 
 
 (
