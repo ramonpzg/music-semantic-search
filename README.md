@@ -82,7 +82,7 @@ client = QdrantClient(
     api_key=os.environ['QDRANT_API_KEY']
 )
 
-metadata = pd.read_parquet('payload.parquet')
+metadata = pd.read_csv('payload.csv')
 metadata['subgenres'] = metadata['subgenres'].apply(lambda x: x.tolist())
 embeddings = np.load('audio_vectors.npy')
 index = metadata['index'].tolist()
@@ -138,6 +138,9 @@ docker run -p 80:8080 -e QDRANT_API_KEY -v $(pwd)/:/app -d --restart always musi
 ```
 
 Now navigate to `https://localhost:80` in your browser and you should be able to see your app.
+
+
+
 
 
 ## 2. From Scratch
