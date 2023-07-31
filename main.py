@@ -130,5 +130,6 @@ ui.colors(
 ui.run(
     title='Qdrant for Music',
     favicon='https://avatars.githubusercontent.com/u/73504361?s=280&v=4',
+    port=443
     # dark=True
 )
