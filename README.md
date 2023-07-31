@@ -2,28 +2,78 @@
 
 
 This project showcases the power of Vector Databases like Qdrant for Semantic Search and Audio 
-data. If you'd like to follow along a create your own app based on this one but for your different 
+data. If you'd like to follow along a create your own app based on this one but for your own 
 playlists, please read along.
 
-If you have never used vector databases, check out the Getting Started section of Qdrant here. If 
-you want to follow a more detailed tutorial on vector databases and audio data, check out this guide 
-in the Qdrant Documentation and this video on YouTube.
+If you have never used vector databases, you should check out the 
+[What is Qdrant](https://qdrant.tech/documentation/overview/) and the 
+[Quick Start](https://qdrant.tech/documentation/quick-start/) sections of Qdrant's documentation, 
+they will get you up to speed in a short amount of time. If you want to follow a more detailed 
+tutorial on vector databases and audio data, check out 
+[this notebook](https://githubtocolab.com/qdrant/examples/blob/master/qdrant_101_audio_data/03_qdrant_101_audio.ipynb) 
+and this [video on YouTube](https://www.youtube.com/watch?v=id5ql-Abq4Y&t=190s&ab_channel=Qdrant).
 
 ## Table of Contents
 
-1. Dependencies
-2. Data
-    - Payload
-    - Songs
-2. Embeddings
-3. Qdrant
-4. Building an App
+1. Minimal Set Up
+    1. Dependencies
+    2. Qdrant Cloud
+    3. Run App Locally
+    4. Deploy
+2. From Scratch
+    1. Data
+        - Payload
+        - Songs
+    2. Embeddings
+    3. Qdrant
+    4. Building an App
+
+## 1. Minimal Set Up
+
+Clone or fork the repository.
+
+```bash
+git clone git@github.com:ramonpzg/music-semantic-search.git
+```
+### 1.1 Dependencies
+
+Create a virtual environment with your favorite tool.
+```bash
+# with mamba or conda
+mamba env create -n my_env python=3.11
+mamba activate my_env
+
+# or with virtualenv
+python -m venv venv
+source venv/bin/activate
+
+# install packages
+pip install -r requirements.txt
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## 1. Data
 
-The data can be found in Kaggle here. It contains 12GB of data, songs from all sorts of genres, 
-and additional metadata that will become the payload of our vectors.
+The data can be found in [Kaggle here](https://www.kaggle.com/datasets/jorgeruizdev/ludwig-music-dataset-moods-and-subgenres). 
+It contains 12GB of data, songs from all sorts of genres, and additional metadata that will become the payload of our vectors.
 
 Once you download the data, you will need to create a bucket on AWS or in your cloud provider 
 of choice as you will need an url for each of your songs once you host this application.
