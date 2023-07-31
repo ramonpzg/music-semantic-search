@@ -1,5 +1,4 @@
-from qdrant_client import QdrantClient
-from qdrant_client import models
+from qdrant_client import QdrantClient, models
 from nicegui import ui
 import pandas as pd
 import os
@@ -49,7 +48,7 @@ artist_song = sorted(metadata['artist_song'].tolist())
 collection = "music_vectors"
 client = QdrantClient(
     "https://394294d5-30bb-4958-ad1a-15a3561edce5.us-east-1-0.aws.cloud.qdrant.io:6333", 
-    api_key=os.environ['QDRANT_API_KEY'],
+    api_key=os.environ['QDRANT_API_KEY']
 )
 
 def create_music_card(qdrant_results):

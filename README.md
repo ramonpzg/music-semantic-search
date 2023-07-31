@@ -19,8 +19,9 @@ and this [video on YouTube](https://www.youtube.com/watch?v=id5ql-Abq4Y&t=190s&a
     1. Dependencies
     2. Qdrant Cloud
     3. Run App Locally
-    4. Deploy
-2. From Scratch
+    4. Package It
+    5. Deploy
+2. From Scratch (Work in Progress)
     1. Data
         - Payload
         - Songs
@@ -37,7 +38,9 @@ git clone git@github.com:ramonpzg/music-semantic-search.git
 ```
 ### 1.1 Dependencies
 
-Create a virtual environment with your favorite tool.
+Create a virtual environment with your favorite tool. This app was tested with python 3.10 and 3.11, but 
+other versions might work well as well.
+
 ```bash
 # with mamba or conda
 mamba env create -n my_env python=3.11
@@ -51,26 +54,99 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+### 1.2 Qdrant Cloud
+
+You can download the embeddings as a `.npy` file [from here](https://drive.google.com/file/d/1erBTHeTxvlz2Oz5VxcjpRlHivjPfv42h/view?usp=sharing).
+
+Next, go to Qdrant Cloud, create an API key, and then add it to your environment as follows.
+
+```sh
+export QDRANT_API_KEY="**************************"
+```
+
+Then you are ready to add the collection to your cluster.
+
+```python
+# load_points.py
+from qdrant_client import QdrantClient, models
+import pandas as pd
+import numpy as np
+import os
+
+collection = "music_vectors"
+batch_size = 250
 
 
+client = QdrantClient(
+    "https://394294d5-30bb-4958-ad1a-15a3561edce5.us-east-1-0.aws.cloud.qdrant.io:6333", 
+    api_key=os.environ['QDRANT_API_KEY']
+)
+
+metadata = pd.read_parquet('payload.parquet')
+metadata['subgenres'] = metadata['subgenres'].apply(lambda x: x.tolist())
+embeddings = np.load('audio_vectors.npy')
+index = metadata['index'].tolist()
+payload = metadata.drop(['index', 'ids'], axis=1).to_dict(orient="records")
+
+client.recreate_collection(
+    collection_name=collection,
+    vectors_config=models.VectorParams(
+        size=embeddings.shape[1], distance=models.Distance.COSINE
+    )
+)
 
 
+for i in range(0, metadata.shape[0], batch_size):
+
+    low_idx = min(i+batch_size, metadata.shape[0])
+
+    batch_of_ids = index[i: low_idx]
+    batch_of_embs = embeddings[i: low_idx]
+    batch_of_payloads = payload[i: low_idx]
+
+    client.upsert(
+        collection_name=collection,
+        points=models.Batch(
+            ids=batch_of_ids,
+            vectors=batch_of_embs.tolist(),
+            payloads=batch_of_payloads
+        )
+    )
+
+```
+
+After you run the `load_points.py` file above, you are ready to test the app locally.
+
+### 1.3 Run App Locally
+
+```python
+python main.py
+```
+
+### 1.4 Package It
+
+Let's now package our app into a docker container. The following command will find our `Dockerfile` and 
+`.dockerignore` inside our directory and build our image for us.
+
+```bash
+docker build -t music_app . 
+```
+Time to test the app. 
+
+```bash
+docker run -p 80:8080 -e QDRANT_API_KEY -v $(pwd)/:/app -d --restart always music_app
+```
+
+Now navigate to `https://localhost:80` in your browser and you should be able to see your app.
 
 
+## 2. From Scratch
 
+Only go through this part if you want to do the entire project from zero.
 
+❗Please note that I am still updating this section and it is currently incomplete.
 
-
-
-
-
-
-
-
-
-
-
-## 1. Data
+## 2.1 Data
 
 The data can be found in [Kaggle here](https://www.kaggle.com/datasets/jorgeruizdev/ludwig-music-dataset-moods-and-subgenres). 
 It contains 12GB of data, songs from all sorts of genres, and additional metadata that will become the payload of our vectors.
