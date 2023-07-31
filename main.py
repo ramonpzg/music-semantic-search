@@ -43,7 +43,7 @@ ui.markdown(
 ).style("max-width: 1000px; font-size: 120%").classes('self-center')
 
 
-metadata = pd.read_parquet("payload.parquet")
+metadata = pd.read_csv("payload.csv")
 artist_song = sorted(metadata['artist_song'].tolist())
 
 collection = "music_vectors"
