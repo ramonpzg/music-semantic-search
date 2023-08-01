@@ -16,13 +16,13 @@ and this [video on YouTube](https://www.youtube.com/watch?v=id5ql-Abq4Y&t=190s&a
 
 ## Table of Contents
 
-1. Minimal Set Up
+1. Minimal Set Up (Completed :sunglasses: )
     1. Dependencies
     2. Qdrant Cloud
     3. Run App Locally
     4. Package It
     5. Deploy
-2. From Scratch (Work in Progress)
+2. From Scratch (In Progress)
     1. Data
         - Payload
         - Songs
