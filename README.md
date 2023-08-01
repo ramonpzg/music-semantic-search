@@ -1,5 +1,6 @@
 # Semantic Search for Songs App
 
+![img](images/music_search_app.gif)
 
 This project showcases the power of Vector Databases like Qdrant for Semantic Search and Audio 
 data. If you'd like to follow along a create your own app based on this one but for your own 
